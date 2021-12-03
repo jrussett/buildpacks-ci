@@ -1,22 +1,10 @@
-#!/bin/bash -l
+#!/bin/bash
 
-set -x
-set -o errexit
-set -o nounset
-set -o pipefail
+set -euo pipefail
 
-export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$PATH
-mkdir -p "$GOPATH"
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-CF_DIR=$GOPATH/src/code.cloudfoundry.org
-mkdir -p "$CF_DIR"/buildpackapplifecycle
+go get -u github.com/onsi/ginkgo/ginkgo
 
-echo "Moving buildpackapplifecycle onto the gopath..."
-cp -R bal-develop/* "$CF_DIR"/buildpackapplifecycle
-
-cd "$CF_DIR/buildpackapplifecycle"
-
-go get -t ./...
-go get github.com/onsi/ginkgo/ginkgo
+cd "${SCRIPT_DIR}/buildpackapplifecycle"
 ginkgo -r
